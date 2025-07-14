@@ -1,0 +1,125 @@
+#pokemon-details {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#details-container {
+    margin-top: 16px;
+}
+
+.tab {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tab.active {
+    border-bottom: 2px solid #000;
+}
+
+.pokemon-image {
+    
+    margin-bottom: 16px;
+
+}
+
+.pokemon-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.pokemon-types {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.pokemon-types .type-icon {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.pokemon-types .type-icon.fire {
+    background-color: #f08030;
+}
+
+.pokemon-types .type-icon.water {
+    background-color: #6890f0;
+}
+
+.pokemon-types .type-icon.grass {
+    background-color: #78c850;
+}
+
+.pokemon-types .type-icon.electric {
+    background-color: #f8d030;
+}
+
+.pokemon-types .type-icon.ice {
+    background-color: #98d8d8;
+}
+
+.pokemon-types .type-icon.fighting {
+    background-color: #c03028;
+}
+
+.pokemon-types .type-icon.poison {
+    background-color: #a040a0;
+}
+
+.pokemon-types .type-icon.ground {
+    background-color: #e0c068;
+}
+
+.pokemon-types .type-icon.flying {
+    background-color: #a890f0;
+}
+
+.pokemon-types .type-icon.psychic {
+    background-color: #f85888;
+}
+
+.pokemon-types .type-icon.bug {
+    background-color: #a8b820;
+}
+
+.pokemon-types .type-icon.rock {
+    background-color: #b8a038;
+}
+
+.pokemon-types .type-icon.ghost {
+    background-color: #705898;
+}
+
+.pokemon-types .type-icon.dragon {
+    background-color: #7038f8;
+}
+
+.pokemon-types .type-icon.dark {
+    background-color: #705848;
+}
+
+.pokemon-types .type-icon.fairy {
+    background-color: #f0b6bc;
+}
+
+.pokemon-types .type-icon.steel {
+    background-color: #b8b8d0;
+}
