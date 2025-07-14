@@ -79,9 +79,9 @@ function getDetailsHtml(pokemon) {
                 ${pokemon.types.map(type => `<span class="type-icon ${type.type.name}">${getPokemonTypeIcon(type.type.name)} ${type.type.name}</span>`).join('')}
             </div>
             <div class="tabs">
-                <button class="tab active" onclick="showTab('info')">Info</button>
-                <button class="tab" onclick="showTab('stats')">Stats</button>
-                <button class="tab" onclick="showTab('evo-chain')">evo chain</button>
+                <button class="tab info active" onclick="showTab('info', ${pokemon.id})">Info</button>
+                <button class="tab stats" onclick="showTab('stats', ${pokemon.id})">Stats</button>
+                <button class="tab evo-chain" onclick="showTab('evo-chain', ${pokemon.id})">evo chain</button>
             </div>
             <div class="pokemon-info" id="info-content">
                 <p>Height: ${pokemon.height}</p>
@@ -103,7 +103,7 @@ function showDetails(pokemonId) {
     });
 }
 
-function showTab(tabName) {
+function showTab(tabName, pokemonId) {
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
 
@@ -116,7 +116,27 @@ function showTab(tabName) {
     });
 
     document.querySelector(`.tab.${tabName}`).classList.add('active');
-    document.querySelector(`.tab-content.${tabName}`).style.display = 'block';
+
+    fetchPokemonData(pokemonId).then(pokemon => {
+        if (pokemon) {
+            renderTabContent(tabName, pokemon);
+        }
+    });
+}
+
+function renderTabContent(tabName, pokemon) {
+    const infoContent = document.getElementById('info-content');
+    switch (tabName) {
+        case 'info':
+            infoContent.innerHTML = getInfoContent(pokemon);
+            break;
+        case 'stats':
+            infoContent.innerHTML = getStatsContent(pokemon);
+            break;
+        case 'evo-chain':
+            infoContent.innerHTML = getEvoChainContent(pokemon);
+            break;
+    }
 }
 
 function getInfoContent(pokemon) {
@@ -127,3 +147,22 @@ function getInfoContent(pokemon) {
         <p>Abilities: ${pokemon.abilities.map(ability => ability.ability.name).join(', ')}</p>
     `;
 }
+
+function getStatsContent(pokemon) {
+    return `
+        <p>HP: ${pokemon.stats.find(stat => stat.stat.name === 'hp').base_stat}</p>
+        <p>Attack: ${pokemon.stats.find(stat => stat.stat.name === 'attack').base_stat}</p>
+        <p>Defense: ${pokemon.stats.find(stat => stat.stat.name === 'defense').base_stat}</p>
+        <p>Speed: ${pokemon.stats.find(stat => stat.stat.name === 'speed').base_stat}</p>
+    `;
+}
+
+function getEvoChainContent(pokemon) {
+    // Fetch and display the evolution chain for the Pokémon
+    return `
+        <p>Evolution Chain:</p>
+        <ul id="evo-chain-list"></ul>
+    `;
+}
+
+
