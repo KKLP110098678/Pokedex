@@ -2,20 +2,6 @@ const BASE_URL = 'https://pokeapi.co/api/v2/pokemon/';
 const POKEMON_PER_PAGE = 32;
 const TOTAL_POKEMON = 1010; // Total number of Pokemon available
 
-function getPokemonTypeIcon(type) {
-    const availableTypes = [
-        'normal', 'fire', 'water', 'grass', 'electric', 'psychic',
-        'ice', 'dragon', 'dark', 'fairy', 'fighting', 'flying',
-        'poison', 'ground', 'rock', 'bug', 'ghost', 'steel'
-    ];
-
-    if (availableTypes.includes(type)) {
-        return `<img src="assets/svg/${type}.svg" alt="${type} type" width="24" height="24" class="type-icon-img">`;
-    }
-
-    return '';
-}
-
 function getCardHtml(pokemon) {
     return `
         <div class="pokemon-card" data-id="${pokemon.id}" onclick="showDetails(${pokemon.id})">
