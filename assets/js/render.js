@@ -1,6 +1,8 @@
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon/';
-const POKEMON_PER_PAGE = 32;
-const TOTAL_POKEMON = 1010; // Total number of Pokemon available
+const POKEMON_PER_PAGE = 8;
+const TOTAL_POKEMON = 1025;
+window.POKEMON_PER_PAGE = POKEMON_PER_PAGE;
+window.TOTAL_POKEMON = TOTAL_POKEMON;
 
 function getCardHtml(pokemon) {
     return `
@@ -42,19 +44,13 @@ async function displayPokemon(pokemonId) {
 }
 
 async function displayPokemonList(page = 1) {
-    // Clear the main content
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = '<div class="loading">Loading Pokemon...</div>';
-    
-    // Calculate start and end Pokemon IDs for the current page
     const startId = (page - 1) * POKEMON_PER_PAGE + 1;
     const endId = Math.min(page * POKEMON_PER_PAGE, TOTAL_POKEMON);
-    
-    // Clear content and add Pokemon cards
     mainContent.innerHTML = '';
-    
-    // Fetch and display Pokemon for the current page
     const promises = [];
+
     for (let id = startId; id <= endId; id++) {
         promises.push(fetchPokemonData(id));
     }
@@ -67,10 +63,7 @@ async function displayPokemonList(page = 1) {
                 mainContent.innerHTML += getCardHtml(pokemon);
             }
         });
-        
-        // Update pagination
         updatePagination(page);
-        
     } catch (error) {
         console.error('Error loading Pokemon list:', error);
         mainContent.innerHTML = '<div class="error">Error loading Pokemon. Please try again.</div>';
@@ -78,6 +71,6 @@ async function displayPokemonList(page = 1) {
 }
 
 function init() {
-    displayPokemonList(1); // Start with page 1
-    displayPokemonTypes(); // Load Pokemon types for filtering
+    displayPokemonList(1);
+    displayPokemonTypes();
 }

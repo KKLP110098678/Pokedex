@@ -5,6 +5,11 @@
     font-family: 'Arial', sans-serif;
 }
 
+a.logo {
+    text-decoration: none;
+    color: inherit;
+}
+
 
 .header {
     background: orange;
@@ -207,10 +212,10 @@
 }
 
 .pokemon-types .type-icon {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding: 4px 8px;
     border-radius: 4px;
-    color: #fff;
     font-size: 14px;
     border: #333 solid 1px;
 }
@@ -225,7 +230,6 @@
 
 .pokemon-types .type-icon.grass {
     background-color: rgba(120, 200, 80, 0.6);
-    transition: background 0.2s;
 }
 
 .pokemon-types .type-icon.electric {

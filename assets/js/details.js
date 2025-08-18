@@ -92,7 +92,7 @@ function getStatsContent(pokemon) {
     `;
 }
 
-function getEvoChainContent(pokemon) {
+function getEvoChainContent() {
     return `
         <p>Evolution Chain:</p>
         <div id="evo-chain-list">
@@ -103,28 +103,21 @@ function getEvoChainContent(pokemon) {
 
 async function loadEvolutionChain(pokemonId) {
     try {
-        // First, get the pokemon species data to get the evolution chain URL
         const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
         if (!speciesResponse.ok) {
             throw new Error(`Error fetching species data: ${speciesResponse.statusText}`);
         }
         const speciesData = await speciesResponse.json();
-        
-        // Get the evolution chain URL and extract the ID
         const evolutionChainUrl = speciesData.evolution_chain.url;
         const evolutionChainId = evolutionChainUrl.split('/').slice(-2, -1)[0];
-        
-        // Fetch the evolution chain data
         const evolutionResponse = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${evolutionChainId}`);
         if (!evolutionResponse.ok) {
             throw new Error(`Error fetching evolution chain: ${evolutionResponse.statusText}`);
         }
         const evolutionData = await evolutionResponse.json();
-        
-        // Parse and display the evolution chain
         const evolutionChain = parseEvolutionChain(evolutionData.chain);
         displayEvolutionChain(evolutionChain);
-        
+
     } catch (error) {
         console.error('Error loading evolution chain:', error);
         document.getElementById('evo-chain-list').innerHTML = '<p>Failed to load evolution chain</p>';
@@ -133,49 +126,40 @@ async function loadEvolutionChain(pokemonId) {
 
 function parseEvolutionChain(chain) {
     const evolutionSteps = [];
-    
     function traverse(chainLink) {
-        // Add current Pokemon to the chain
         evolutionSteps.push({
             name: chainLink.species.name,
             id: getPokemonIdFromUrl(chainLink.species.url)
         });
-        
-        // Process all possible evolutions
+
         if (chainLink.evolves_to && chainLink.evolves_to.length > 0) {
             chainLink.evolves_to.forEach(evolution => {
                 traverse(evolution);
             });
         }
     }
-    
     traverse(chain);
     return evolutionSteps;
 }
 
 function getPokemonIdFromUrl(url) {
-    // Extract Pokemon ID from species URL
     const urlParts = url.split('/');
     return urlParts[urlParts.length - 2];
 }
 
 async function displayEvolutionChain(evolutionChain) {
     const evoChainContainer = document.getElementById('evo-chain-list');
-    
+
     if (evolutionChain.length <= 1) {
         evoChainContainer.innerHTML = '<p>This Pokémon does not evolve.</p>';
         return;
     }
-    
+
     let evolutionHtml = '<div class="evolution-chain">';
-    
     for (let i = 0; i < evolutionChain.length; i++) {
         const pokemon = evolutionChain[i];
-        
         try {
-            // Fetch Pokemon data for each evolution stage
             const pokemonData = await fetchPokemonData(pokemon.id);
-            
             if (pokemonData) {
                 evolutionHtml += `
                     <div class="evolution-stage">
@@ -186,8 +170,7 @@ async function displayEvolutionChain(evolutionChain) {
                         </div>
                     </div>
                 `;
-                
-                // Add arrow between evolution stages (except for the last one)
+
                 if (i < evolutionChain.length - 1) {
                     evolutionHtml += '<div class="evolution-arrow">→</div>';
                 }
@@ -196,7 +179,6 @@ async function displayEvolutionChain(evolutionChain) {
             console.error(`Error fetching data for ${pokemon.name}:`, error);
         }
     }
-    
     evolutionHtml += '</div>';
     evoChainContainer.innerHTML = evolutionHtml;
 }

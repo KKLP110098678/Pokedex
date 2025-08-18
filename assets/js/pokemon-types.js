@@ -164,7 +164,9 @@ async function fetchPokemonByTypes(selectedTypes) {
     return resultSet;
 }
 
-async function filterByTypes() {
+window.filteredAndSearchedPokemon = null;
+
+async function filterByTypes(page = 1) {
     const checkboxes = document.querySelectorAll('#type-filter input[type="checkbox"]');
     const selectedTypes = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
@@ -176,19 +178,20 @@ async function filterByTypes() {
     if (!baseList) {
         if (selectedTypes.length === 0) {
             if (typeof displayPokemonList === 'function') {
-                displayPokemonList(1);
+                displayPokemonList(page);
             } else {
                 const promises = [];
-                for (let id = 1; id <= 32; id++) {
+                for (let id = 1; id <= PAGE_SIZE; id++) {
                     promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.ok ? r.json() : null));
                 }
                 const pokemonList = (await Promise.all(promises)).filter(Boolean);
-                displayFilteredPokemon(pokemonList);
+                window.filteredAndSearchedPokemon = pokemonList;
+                displayFilteredPokemon(paginateList(pokemonList, page));
+                updatePagination(page, pokemonList.length);
             }
             return;
         }
 
-        // No search, but types selected: fetch by types
         const basicPokemonList = await fetchPokemonByTypes(selectedTypes);
         const detailedPokemonList = await Promise.all(
             basicPokemonList.map(async p => {
@@ -202,16 +205,33 @@ async function filterByTypes() {
             })
         );
         const validPokemon = detailedPokemonList.filter(p => p);
-        displayFilteredPokemon(validPokemon);
+        window.filteredAndSearchedPokemon = validPokemon;
+        displayFilteredPokemon(paginateList(validPokemon, page));
+        updatePagination(page, validPokemon.length);
         return;
     }
 
-    // If a search is active, filter the search results by type
     const filtered = applyTypeFilterToList(baseList, selectedTypes);
-    displayFilteredPokemon(filtered);
+    window.filteredAndSearchedPokemon = filtered;
+    displayFilteredPokemon(paginateList(filtered, page));
+    updatePagination(page, filtered.length);
 }
 
-// Helper to filter a list of Pokémon objects by selected types
+function paginateList(list, page) {
+    const pageSize = window.POKEMON_PER_PAGE;
+    const start = (page - 1) * pageSize;
+    return list.slice(start, start + pageSize);
+}
+
+function onPaginationPageChange(page) {
+    if (window.filteredAndSearchedPokemon) {
+        displayFilteredPokemon(paginateList(window.filteredAndSearchedPokemon, page));
+        updatePagination(page, window.filteredAndSearchedPokemon.length);
+    } else if (typeof displayPokemonList === 'function') {
+        displayPokemonList(page);
+    }
+}
+
 function applyTypeFilterToList(pokemonList, selectedTypes) {
     if (!selectedTypes || selectedTypes.length === 0) return pokemonList;
     return pokemonList.filter(pokemon => {

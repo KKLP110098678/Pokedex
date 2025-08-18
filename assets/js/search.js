@@ -30,7 +30,6 @@ function handleSearchButton() {
     
     searchPokemon(query);
     
-    // Hide pagination during search
     const paginationContainer = document.getElementById('pagination-container');
     if (paginationContainer) {
         paginationContainer.style.display = 'none';
@@ -40,14 +39,12 @@ function handleSearchButton() {
 function clearSearch() {
     const searchInput = document.getElementById('search-input');
     searchInput.value = '';
-    
-    // Show all Pokemon cards
+
     const pokemonCards = document.querySelectorAll('.pokemon-card');
     pokemonCards.forEach(card => {
         card.style.display = 'block';
     });
-    
-    // Show pagination
+
     const paginationContainer = document.getElementById('pagination-container');
     if (paginationContainer) {
         paginationContainer.style.display = 'flex';
