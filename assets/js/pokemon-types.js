@@ -9,8 +9,6 @@ async function fetchPokemonTypes() {
     }
 }
 
-
-
 function displayPokemonTypes() {
     fetchPokemonTypes().then(types => {
         const typeContainer = document.getElementById('type-filter');
@@ -135,9 +133,6 @@ function applyTypeFilterToList(pokemonList, selectedTypes) {
         return selectedTypes.every(type => types.includes(type));
     });
 }
-
-
-
 
 function displayFilteredPokemon(pokemon) {
     const pokemonContainer = document.getElementById('main-content');

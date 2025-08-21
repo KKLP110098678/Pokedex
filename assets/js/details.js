@@ -1,31 +1,3 @@
-function getDetailsHtml(pokemon) {
-    return `
-        <div class="pokemon-details">
-            <div class="card-header">
-                <span class="pokemon-id">#${pokemon.id}</span>
-                <span class="pokemon-name">${pokemon.name}</span>
-            </div>
-            <div class="pokemon-image">
-                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-            </div>
-            <div class="pokemon-types">
-                ${pokemon.types.map(type => `<span class="type-icon ${type.type.name}">${getPokemonTypeIcon(type.type.name)} ${type.type.name}</span>`).join('')}
-            </div>
-            <div class="tabs">
-                <button class="tab info active" onclick="showTab('info', ${pokemon.id})">Info</button>
-                <button class="tab stats" onclick="showTab('stats', ${pokemon.id})">Stats</button>
-                <button class="tab evo-chain" onclick="showTab('evo-chain', ${pokemon.id})">evo chain</button>
-            </div>
-            <div class="pokemon-info" id="info-content">
-                <p>Height: ${pokemon.height}</p>
-                <p>Weight: ${pokemon.weight}</p>
-                <p>Base Experience: ${pokemon.base_experience}</p>
-                <p>Abilities: ${pokemon.abilities.map(ability => ability.ability.name).join(', ')}</p>
-            </div>
-        </div>
-    `;
-}
-
 function showDetails(pokemonId) {
     fetchPokemonData(pokemonId).then(pokemon => {
         if (pokemon) {
@@ -72,33 +44,6 @@ function renderTabContent(tabName, pokemon) {
             loadEvolutionChain(pokemon.id);
             break;
     }
-}
-
-function getInfoContent(pokemon) {
-    return `
-        <p>Height: ${pokemon.height}</p>
-        <p>Weight: ${pokemon.weight}</p>
-        <p>Base Experience: ${pokemon.base_experience}</p>
-        <p>Abilities: ${pokemon.abilities.map(ability => ability.ability.name).join(', ')}</p>
-    `;
-}
-
-function getStatsContent(pokemon) {
-    return `
-        <p>HP: ${pokemon.stats.find(stat => stat.stat.name === 'hp').base_stat}</p>
-        <p>Attack: ${pokemon.stats.find(stat => stat.stat.name === 'attack').base_stat}</p>
-        <p>Defense: ${pokemon.stats.find(stat => stat.stat.name === 'defense').base_stat}</p>
-        <p>Speed: ${pokemon.stats.find(stat => stat.stat.name === 'speed').base_stat}</p>
-    `;
-}
-
-function getEvoChainContent() {
-    return `
-        <p>Evolution Chain:</p>
-        <div id="evo-chain-list">
-            <p>Loading evolution chain...</p>
-        </div>
-    `;
 }
 
 async function loadEvolutionChain(pokemonId) {
@@ -161,16 +106,7 @@ async function displayEvolutionChain(evolutionChain) {
         try {
             const pokemonData = await fetchPokemonData(pokemon.id);
             if (pokemonData) {
-                evolutionHtml += `
-                    <div class="evolution-stage">
-                        <div class="pokemon-evolution-card" onclick="showDetails(${pokemonData.id})">
-                            <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}" width="80" height="80">
-                            <p class="evolution-name">${pokemonData.name}</p>
-                            <p class="evolution-id">#${pokemonData.id}</p>
-                        </div>
-                    </div>
-                `;
-
+                evolutionHtml += getEvolutionStageTemplate(pokemonData);
                 if (i < evolutionChain.length - 1) {
                     evolutionHtml += '<div class="evolution-arrow">→</div>';
                 }
