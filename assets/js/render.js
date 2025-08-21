@@ -4,23 +4,7 @@ const TOTAL_POKEMON = 1025;
 window.POKEMON_PER_PAGE = POKEMON_PER_PAGE;
 window.TOTAL_POKEMON = TOTAL_POKEMON;
 
-function getCardHtml(pokemon) {
-    return `
-        <div class="pokemon-card" data-id="${pokemon.id}" onclick="showDetails(${pokemon.id})">
-            <div class="pokemon-image">
-                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-            </div>
-            <div class="pokemon-info">
-                <h2>${pokemon.name}</h2>
-                <p>Height: ${pokemon.height}</p>
-                <p>Weight: ${pokemon.weight}</p>
-                <div class="pokemon-types">
-                    ${pokemon.types.map(type => `<span class="type-icon ${type.type.name}">${getPokemonTypeIcon(type.type.name)}</span>`).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-}
+// Card-HTML wird jetzt über getCardTemplate aus templates.js erzeugt
 
 async function fetchPokemonData(pokemonId) {
     try {
@@ -39,7 +23,7 @@ async function displayPokemon(pokemonId) {
     const pokemon = await fetchPokemonData(pokemonId);
     if (pokemon) {
         const mainContent = document.getElementById('main-content');
-        mainContent.innerHTML += getCardHtml(pokemon);
+        mainContent.innerHTML += getCardTemplate(pokemon);
     }
 }
 
@@ -60,7 +44,7 @@ async function displayPokemonList(page = 1) {
         
         pokemonList.forEach(pokemon => {
             if (pokemon) {
-                mainContent.innerHTML += getCardHtml(pokemon);
+                mainContent.innerHTML += getCardTemplate(pokemon);
             }
         });
         updatePagination(page);
