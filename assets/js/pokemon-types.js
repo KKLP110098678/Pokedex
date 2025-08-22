@@ -60,55 +60,54 @@ async function fetchPokemonByTypes(selectedTypes) {
 window.filteredAndSearchedPokemon = null;
 
 async function filterByTypes(page = 1) {
-    const checkboxes = document.querySelectorAll('#type-filter input[type="checkbox"]');
-    const selectedTypes = Array.from(checkboxes)
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.value);
-
-    // If a search is active, use the filtered search list, else fetch all
+    const selectedTypes = getSelectedTypes();
     let baseList = window.currentSearchResults || null;
-
     if (!baseList) {
-        if (selectedTypes.length === 0) {
-            if (typeof displayPokemonList === 'function') {
-                displayPokemonList(page);
-            } else {
-                const promises = [];
-                for (let id = 1; id <= PAGE_SIZE; id++) {
-                    promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.ok ? r.json() : null));
-                }
-                const pokemonList = (await Promise.all(promises)).filter(Boolean);
-                window.filteredAndSearchedPokemon = pokemonList;
-                displayFilteredPokemon(paginateList(pokemonList, page));
-                updatePagination(page, pokemonList.length);
-            }
-            return;
-        }
-
-        const basicPokemonList = await fetchPokemonByTypes(selectedTypes);
-        const detailedPokemonList = await Promise.all(
-            basicPokemonList.map(async p => {
-                try {
-                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.name || p.id || p}`);
-                    if (!response.ok) return null;
-                    return await response.json();
-                } catch {
-                    return null;
-                }
-            })
-        );
-        const validPokemon = detailedPokemonList.filter(p => p);
-        window.filteredAndSearchedPokemon = validPokemon;
-        displayFilteredPokemon(paginateList(validPokemon, page));
-        updatePagination(page, validPokemon.length);
-        return;
+        if (selectedTypes.length === 0) return handleNoFilter(page);
+        return handleTypeFilter(selectedTypes, page);
     }
+    return handleSearchTypeFilter(baseList, selectedTypes, page);
+}
 
+function getSelectedTypes() {
+    const checkboxes = document.querySelectorAll('#type-filter input[type="checkbox"]');
+    return Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+}
+
+async function handleNoFilter(page) {
+    if (typeof displayPokemonList === 'function') return displayPokemonList(page);
+    const promises = [];
+    for (let id = 1; id <= PAGE_SIZE; id++) promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.ok ? r.json() : null));
+    const pokemonList = (await Promise.all(promises)).filter(Boolean);
+    window.filteredAndSearchedPokemon = pokemonList;
+    displayFilteredPokemon(paginateList(pokemonList, page));
+    updatePagination(page, pokemonList.length);
+}
+
+async function handleTypeFilter(selectedTypes, page) {
+    const basicPokemonList = await fetchPokemonByTypes(selectedTypes);
+    const detailedPokemonList = await Promise.all(
+        basicPokemonList.map(async p => {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.name || p.id || p}`);
+                if (!response.ok) return null;
+                return await response.json();
+            } catch { return null; }
+        })
+    );
+    const validPokemon = detailedPokemonList.filter(p => p);
+    window.filteredAndSearchedPokemon = validPokemon;
+    displayFilteredPokemon(paginateList(validPokemon, page));
+    updatePagination(page, validPokemon.length);
+}
+
+function handleSearchTypeFilter(baseList, selectedTypes, page) {
     const filtered = applyTypeFilterToList(baseList, selectedTypes);
     window.filteredAndSearchedPokemon = filtered;
     displayFilteredPokemon(paginateList(filtered, page));
     updatePagination(page, filtered.length);
 }
+
 
 function paginateList(list, page) {
     const pageSize = window.POKEMON_PER_PAGE;

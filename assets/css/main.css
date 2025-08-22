@@ -539,3 +539,46 @@ a.logo {
         min-width: 36px;
     }
 }
+
+@media (max-width: 655px) {
+    .filter-container {
+        flex-direction: column;
+    }
+
+    .search-container {
+        margin-bottom: 0px;
+    }
+
+    .filter-menu {
+        flex-direction: column;
+    }
+
+    .filter-types, .filter-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 440px) and (any-pointer: coarse) {
+    .search-container input {
+        border-radius: 8px;
+    }
+
+    .search-container button {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 440px) {
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-container input {
+        border-radius: 8px;
+    }
+
+    .search-container button {
+        border-radius: 8px !important;
+    }
+
+}

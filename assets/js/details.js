@@ -5,6 +5,7 @@ function showDetails(pokemonId) {
             const pokemonDetails = document.getElementById('pokemon-details');
             detailsContainer.innerHTML = getDetailsHtml(pokemon);
             pokemonDetails.style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
     });
 }
@@ -122,5 +123,6 @@ async function displayEvolutionChain(evolutionChain) {
 function closeDetails() {
     const detailsContainer = document.getElementById('pokemon-details');
     detailsContainer.style.display = 'none';
+    document.body.style.overflow = '';
 }
 
