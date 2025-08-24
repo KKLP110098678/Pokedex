@@ -49,7 +49,6 @@ async function fetchPokemonByTypes(selectedTypes) {
         })
     );
 
-
     let resultSet = allPokemonSets[0] || [];
     for (let i = 1; i < allPokemonSets.length; i++) {
         resultSet = resultSet.filter(name => allPokemonSets[i].includes(name));
@@ -115,7 +114,6 @@ function handleSearchTypeFilter(baseList, selectedTypes, page) {
     displayFilteredPokemon(paginateList(filtered, page));
     updatePagination(page, filtered.length);
 }
-
 
 function paginateList(list, page) {
     const pageSize = window.POKEMON_PER_PAGE;

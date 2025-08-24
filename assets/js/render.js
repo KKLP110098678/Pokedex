@@ -1,4 +1,3 @@
-// Erzeuge eine Liste mit allen Pokémon-Namen und IDs für die Suche
 function buildAllPokemonList() {
     window.allPokemonList = window.allPokemonData.map(p => ({
         name: p.name,
@@ -10,8 +9,6 @@ const POKEMON_PER_PAGE = 8;
 const TOTAL_POKEMON = 1025;
 window.POKEMON_PER_PAGE = POKEMON_PER_PAGE;
 window.TOTAL_POKEMON = TOTAL_POKEMON;
-
-// Card-HTML wird jetzt über getCardTemplate aus templates.js erzeugt
 
 async function fetchPokemonData(pokemonId) {
     try {
@@ -61,7 +58,6 @@ async function displayPokemonList(page = 1) {
     }
 }
 
-// Lädt alle Pokémon-Daten einmalig und speichert sie global
 async function fetchAllPokemonData() {
     const promises = [];
     for (let id = 1; id <= TOTAL_POKEMON; id++) {
@@ -69,7 +65,7 @@ async function fetchAllPokemonData() {
     }
     try {
         const allData = await Promise.all(promises);
-        window.allPokemonData = allData.filter(p => !!p); // Nur gültige Pokémon
+        window.allPokemonData = allData.filter(p => !!p);
     } catch (error) {
         console.error('Fehler beim Laden aller Pokémon-Daten:', error);
         window.allPokemonData = [];
