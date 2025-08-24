@@ -63,10 +63,18 @@ async function filterByTypes(page = 1) {
     const selectedTypes = getSelectedTypes();
     let baseList = window.currentSearchResults || null;
     if (!baseList) {
-        if (selectedTypes.length === 0) return handleNoFilter(page);
-        return handleTypeFilter(selectedTypes, page);
+        if (selectedTypes.length === 0) {
+            // Reset to all Pokémon and first page
+            window.filteredAndSearchedPokemon = null;
+            if (typeof displayPokemonList === 'function') {
+                displayPokemonList(1);
+                updatePagination(1, window.TOTAL_POKEMON);
+            }
+            return;
+        }
+        return handleTypeFilter(selectedTypes, 1); // always reset to first page
     }
-    return handleSearchTypeFilter(baseList, selectedTypes, page);
+    return handleSearchTypeFilter(baseList, selectedTypes, 1); // always reset to first page
 }
 
 function getSelectedTypes() {
@@ -121,6 +129,7 @@ function onPaginationPageChange(page) {
         updatePagination(page, window.filteredAndSearchedPokemon.length);
     } else if (typeof displayPokemonList === 'function') {
         displayPokemonList(page);
+        updatePagination(page, window.TOTAL_POKEMON);
     }
 }
 
@@ -150,10 +159,16 @@ function displayFilteredPokemon(pokemon) {
 function resetTypeFilter() {
     const checkboxes = document.querySelectorAll('#type-filter input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
-        checkbox.checked = checkbox.value === 'all';
+        checkbox.checked = false;
     });
+    window.filteredAndSearchedPokemon = null;
+    window.currentSearchResults = null;
     displayPokemonTypes();
-    filterByTypes();
+    // Always show first page after reset
+    if (typeof displayPokemonList === 'function') {
+        displayPokemonList(1);
+        updatePagination(1, window.TOTAL_POKEMON);
+    }
 }
 
 

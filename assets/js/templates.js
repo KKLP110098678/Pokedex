@@ -73,6 +73,7 @@ function getEvolutionStageTemplate(pokemonData) {
                 <p class="evolution-name">${pokemonData.name}</p>
                 <p class="evolution-id">#${pokemonData.id}</p>
             </div>
+           
         </div>
     `;
 }

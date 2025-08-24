@@ -1,3 +1,10 @@
+// Erzeuge eine Liste mit allen Pokémon-Namen und IDs für die Suche
+function buildAllPokemonList() {
+    window.allPokemonList = window.allPokemonData.map(p => ({
+        name: p.name,
+        id: p.id
+    }));
+}
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon/';
 const POKEMON_PER_PAGE = 8;
 const TOTAL_POKEMON = 1025;
@@ -38,10 +45,10 @@ async function displayPokemonList(page = 1) {
     for (let id = startId; id <= endId; id++) {
         promises.push(fetchPokemonData(id));
     }
-    
+
     try {
         const pokemonList = await Promise.all(promises);
-        
+
         pokemonList.forEach(pokemon => {
             if (pokemon) {
                 mainContent.innerHTML += getCardTemplate(pokemon);
@@ -54,7 +61,24 @@ async function displayPokemonList(page = 1) {
     }
 }
 
-function init() {
+// Lädt alle Pokémon-Daten einmalig und speichert sie global
+async function fetchAllPokemonData() {
+    const promises = [];
+    for (let id = 1; id <= TOTAL_POKEMON; id++) {
+        promises.push(fetchPokemonData(id));
+    }
+    try {
+        const allData = await Promise.all(promises);
+        window.allPokemonData = allData.filter(p => !!p); // Nur gültige Pokémon
+    } catch (error) {
+        console.error('Fehler beim Laden aller Pokémon-Daten:', error);
+        window.allPokemonData = [];
+    }
+}
+
+async function init() {
+    await fetchAllPokemonData(); // fetches and sets window.allPokemonData
+    buildAllPokemonList();       // now safe to call, data is loaded
     displayPokemonList(1);
     displayPokemonTypes();
 }
