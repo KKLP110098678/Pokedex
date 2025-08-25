@@ -36,21 +36,11 @@ async function displayPokemonList(page = 1) {
     mainContent.innerHTML = '<div class="loading">Loading Pokemon...</div>';
     const startId = (page - 1) * POKEMON_PER_PAGE + 1;
     const endId = Math.min(page * POKEMON_PER_PAGE, TOTAL_POKEMON);
-    mainContent.innerHTML = '';
-    const promises = [];
-
-    for (let id = startId; id <= endId; id++) {
-        promises.push(fetchPokemonData(id));
-    }
-
     try {
-        const pokemonList = await Promise.all(promises);
-
-        pokemonList.forEach(pokemon => {
-            if (pokemon) {
-                mainContent.innerHTML += getCardTemplate(pokemon);
-            }
-        });
+        const pokemonList = await Promise.all(
+            Array.from({ length: endId - startId + 1 }, (_, i) => fetchPokemonData(startId + i))
+        );
+        mainContent.innerHTML = pokemonList.filter(Boolean).map(getCardTemplate).join('');
         updatePagination(page);
     } catch (error) {
         console.error('Error loading Pokemon list:', error);

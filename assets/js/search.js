@@ -1,5 +1,4 @@
 function searchPokemon(query) {
-    console.log(window.allPokemonList);
     const results = window.allPokemonList.filter(p =>
         p.name.toLowerCase().includes(query.toLowerCase()) || String(p.id).includes(query)
     );
@@ -22,14 +21,14 @@ function handleSearch(event) {
 function handleSearchButton() {
     const searchInput = document.getElementById('search-input');
     const query = searchInput.value.trim();
-    
+
     if (query === '') {
         clearSearch();
         return;
     }
-    
+
     searchPokemon(query);
-    
+
     const paginationContainer = document.getElementById('pagination-container');
     if (paginationContainer) {
         paginationContainer.style.display = 'none';
@@ -39,15 +38,8 @@ function handleSearchButton() {
 function clearSearch() {
     const searchInput = document.getElementById('search-input');
     searchInput.value = '';
-
-    const pokemonCards = document.querySelectorAll('.pokemon-card');
-    pokemonCards.forEach(card => {
-        card.style.display = 'block';
-    });
-
+    displayPokemonList(1);
     const paginationContainer = document.getElementById('pagination-container');
-    if (paginationContainer) {
-        paginationContainer.style.display = 'flex';
-    }
+    paginationContainer.style.display = 'flex';
 }
 

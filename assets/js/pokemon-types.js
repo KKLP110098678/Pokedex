@@ -65,10 +65,8 @@ async function filterByTypes(page = 1) {
         if (selectedTypes.length === 0) {
             // Reset to all Pokémon and first page
             window.filteredAndSearchedPokemon = null;
-            if (typeof displayPokemonList === 'function') {
-                displayPokemonList(1);
-                updatePagination(1, window.TOTAL_POKEMON);
-            }
+            displayPokemonList(1);
+            updatePagination(1, window.TOTAL_POKEMON);
             return;
         }
         return handleTypeFilter(selectedTypes, 1); // always reset to first page
@@ -162,11 +160,9 @@ function resetTypeFilter() {
     window.filteredAndSearchedPokemon = null;
     window.currentSearchResults = null;
     displayPokemonTypes();
-    // Always show first page after reset
-    if (typeof displayPokemonList === 'function') {
-        displayPokemonList(1);
-        updatePagination(1, window.TOTAL_POKEMON);
-    }
+    displayPokemonList(1);
+    updatePagination(1, window.TOTAL_POKEMON);
+
 }
 
 
