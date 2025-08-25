@@ -55,7 +55,6 @@ a.logo {
 .search-container {
     display: flex;
     margin-bottom: 30px;
-    flex-wrap: wrap;
 }
 
 .search-container input {
@@ -570,7 +569,7 @@ a.logo {
     }
 }
 
-@media (max-width: 440px) and (any-pointer: coarse) {
+@media (max-width: 445px) and (any-pointer: coarse) {
     .search-container input {
         border-radius: 8px;
     }
@@ -580,7 +579,7 @@ a.logo {
     }
 }
 
-@media screen and (max-width: 440px) {
+@media screen and (max-width: 445px) {
     .search-container {
         flex-direction: column;
     }
